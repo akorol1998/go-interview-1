@@ -34,7 +34,7 @@ func (s *jsonStruct) jsonEncode() []byte {
 func main() {
 	num := 10
 	s1 := make([]string, num)
-	for i, _ := range s1 {
+	for i := range s1 {
 		s1[i] = fmt.Sprintf("res-%d", i)
 	}
 	s2 := make([]string, num)
