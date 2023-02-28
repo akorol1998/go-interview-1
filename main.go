@@ -1,47 +1,26 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+
+	"github.com/akorol1998/go-interview-1/encoder"
 )
-
-type jsonStruct struct {
-	Type   int
-	Result []string
-}
-
-func (s *jsonStruct) jsonEncode() []byte {
-	var suf string
-
-	jsonString := fmt.Sprintf(`{"type":%d, "result":[`, s.Type)
-	suf = `]`
-	if s.Type == 2 {
-		jsonString = jsonString[:len(jsonString)-1] + "{"
-		suf = `}`
-	}
-	for idx, str := range s.Result {
-		if s.Type == 2 {
-			jsonString += fmt.Sprintf(`"%d":"%s",`, idx, str)
-		} else {
-			jsonString += fmt.Sprintf(`"%s",`, str)
-		}
-	}
-
-	jsonString = jsonString[:len(jsonString)-1]
-	jsonString += fmt.Sprintf(`%s]`, suf)
-	return []byte(jsonString)
-}
 
 func main() {
 	num := 10
 	s1 := make([]string, num)
 	for i := range s1 {
-		s1[i] = fmt.Sprintf("res-%d", i)
+		s1[i] = fmt.Sprintf(`res-%s-%v`, "\t--\n-\\-\b-\f-\r", i)
 	}
 	s2 := make([]string, num)
 	copy(s2, s1)
-	js1 := jsonStruct{1, s1}
-	js2 := jsonStruct{2, s2}
+	js1 := encoder.JsonStruct{1, s1}
+	js2 := encoder.JsonStruct{2, s2}
 
-	fmt.Printf("json encoded type:1: %s\n", js1.jsonEncode())
-	fmt.Printf("json encoded type:2: %s\n", js2.jsonEncode())
+	encJs1, _ := encoder.JsonEncode(&js1)
+	encJs2, _ := encoder.JsonEncode(&js2)
+
+	fmt.Printf("json encoded type:1\nencoded:%s is_valid:%v\n", encJs1, json.Valid(encJs1))
+	fmt.Printf("json encoded type:2\nencoded:%s is_valid:%v\n", encJs2, json.Valid(encJs2))
 }
